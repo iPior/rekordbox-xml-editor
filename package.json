@@ -2,6 +2,7 @@
   "name": "rekordbox-xml-editor",
   "private": true,
   "version": "0.1.0",
+  "packageManager": "bun@1.2.21",
   "type": "module",
   "scripts": {
     "dev": "vite",

@@ -32,19 +32,19 @@ MVP desktop companion app for safely browsing and bulk-editing Rekordbox XML lib
 2. Install dependencies:
 
    ```bash
-   npm install
+   bun install
    ```
 
 3. Start desktop dev app:
 
    ```bash
-   npm run tauri dev
+   bun run tauri dev
    ```
 
 4. Build production bundle:
 
    ```bash
-   npm run tauri build
+   bun run tauri build
    ```
 
 ## MVP flow
