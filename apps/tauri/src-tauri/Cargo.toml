@@ -1,0 +1,21 @@
+[package]
+name = "rekordbox-tauri-shell"
+version = "0.1.0"
+description = "Tauri shell for Rekordbox XML Editor monorepo"
+authors = ["you"]
+edition = "2021"
+
+[lib]
+name = "rekordbox_tauri_shell"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.0.0", features = [] }
+
+[dependencies]
+chrono = { version = "0.4", default-features = false, features = ["clock"] }
+roxmltree = "0.20"
+serde = { version = "1", features = ["derive"] }
+tauri = { version = "2.0.0", features = [] }
+tauri-plugin-dialog = "2.0.0"
+thiserror = "1"

@@ -1,0 +1,22 @@
+{
+  "name": "@rekordbox/ui",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./styles.css": "./src/styles.css"
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rekordbox/core": "workspace:*",
+    "@rekordbox/types": "workspace:*",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.2",
+    "typescript": "^5.6.2"
+  }
+}

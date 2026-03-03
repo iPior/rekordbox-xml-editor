@@ -1,0 +1,30 @@
+{
+  "name": "@rekordbox/electron-app",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "dist-electron/main/index.js",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "preview": "electron-vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@rekordbox/core": "workspace:*",
+    "@rekordbox/types": "workspace:*",
+    "@rekordbox/ui": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.8.1",
+    "@types/react": "^18.3.2",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "electron": "^32.2.0",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.6.2",
+    "vite": "^5.4.1"
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Rekordbox XML Editor (Tauri)",
+  "version": "0.1.0",
+  "identifier": "com.example.rekordboxxmleditor.tauri",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "beforeBuildCommand": "bun run build",
+    "devUrl": "http://localhost:1430",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Rekordbox XML Editor (Tauri)",
+        "width": 1500,
+        "height": 900,
+        "minWidth": 1024,
+        "minHeight": 680
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": false,
+    "targets": "all"
+  }
+}

@@ -1,5 +1,8 @@
 node_modules/
 dist/
 target/
-src-tauri/target/
+apps/*/dist/
+apps/*/dist-electron/
+apps/tauri/src-tauri/target/
+apps/tauri/src-tauri/gen/
 *.log

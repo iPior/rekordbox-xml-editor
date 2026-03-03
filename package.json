@@ -1,27 +1,24 @@
 {
-  "name": "rekordbox-xml-editor",
+  "name": "rekordbox-xml-editor-monorepo",
   "private": true,
   "version": "0.1.0",
   "packageManager": "bun@1.2.21",
   "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview",
-    "tauri": "tauri"
-  },
-  "dependencies": {
-    "@tauri-apps/api": "^2.0.0",
-    "@tauri-apps/plugin-dialog": "^2.0.0",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "dev:electron": "bun run --cwd apps/electron dev",
+    "dev:tauri": "bun run --cwd apps/tauri tauri dev",
+    "build:electron": "bun run --cwd apps/electron build",
+    "build:tauri": "bun run --cwd apps/tauri tauri build",
+    "typecheck": "bun run typecheck:packages && bun run typecheck:apps",
+    "typecheck:packages": "bun run --cwd packages/types typecheck && bun run --cwd packages/core typecheck && bun run --cwd packages/ui typecheck",
+    "typecheck:apps": "bun run --cwd apps/electron typecheck && bun run --cwd apps/tauri typecheck",
+    "lint": "bun run typecheck"
   },
   "devDependencies": {
-    "@tauri-apps/cli": "^2.0.0",
-    "@types/react": "^18.3.2",
-    "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
-    "typescript": "^5.6.2",
-    "vite": "^5.4.1"
+    "typescript": "^5.6.2"
   }
 }

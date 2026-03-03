@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="rekordbox" Version="6.8.5"/>
+  <COLLECTION Entries="2">
+    <TRACK TrackID="1" Name="Track One" Artist="Artist A" Album="Album A" Genre="House" AverageBpm="124" Tonality="8A" Rating="4" Comments="Warmup" Location="file:///music/track-one.mp3" />
+    <TRACK TrackID="2" Name="Track Two" Artist="Artist B" Album="Album B" Genre="Techno" AverageBpm="130" Tonality="6A" Rating="5" Comments="Peak" Location="file:///music/track-two.mp3" />
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Type="0" Name="ROOT">
+      <NODE Name="Favorites" Type="1" Id="pl-1" Entries="2">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
