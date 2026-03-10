@@ -7,3 +7,4 @@ apps/electron/out/
 apps/tauri/src-tauri/target/
 apps/tauri/src-tauri/gen/
 *.log
+fixtures/

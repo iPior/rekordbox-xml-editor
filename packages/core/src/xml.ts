@@ -32,6 +32,16 @@ function asString(value: unknown): string | undefined {
   return undefined;
 }
 
+function asNumber(value: unknown): number | undefined {
+  const text = asString(value);
+  if (text === undefined || text.trim() === "") {
+    return undefined;
+  }
+
+  const parsed = Number(text);
+  return Number.isNaN(parsed) ? undefined : parsed;
+}
+
 function parseTrack(raw: AnyRecord, fallbackIndex: number): Track {
   return {
     id: asString(raw["@_TrackID"]) ?? asString(raw["@_ID"]) ?? `generated-${fallbackIndex}`,
@@ -39,27 +49,27 @@ function parseTrack(raw: AnyRecord, fallbackIndex: number): Track {
     artist: asString(raw["@_Artist"]),
     album: asString(raw["@_Album"]),
     genre: asString(raw["@_Genre"]),
-    bpm: Number(asString(raw["@_AverageBpm"]) ?? "") || undefined,
+    bpm: asNumber(raw["@_AverageBpm"]),
     key: asString(raw["@_Tonality"]),
-    rating: Number(asString(raw["@_Rating"]) ?? "") || undefined,
+    rating: asNumber(raw["@_Rating"]),
     comments: asString(raw["@_Comments"]),
     location: asString(raw["@_Location"])
   };
 }
 
-function parsePlaylist(node: AnyRecord): Playlist {
+function parsePlaylist(node: AnyRecord, pathId: string): Playlist {
   const nodeType = asString(node["@_Type"]) === "0" ? "folder" : "playlist";
 
   const trackIds = toArray(node.TRACK as AnyRecord | AnyRecord[] | undefined)
-    .map((trackRef) => asString(trackRef["@_Key"]))
+    .map((trackRef) => asString(trackRef["@_Key"]) ?? asString(trackRef["@_TrackID"]))
     .filter((value): value is string => Boolean(value));
 
-  const children = toArray(node.NODE as AnyRecord | AnyRecord[] | undefined).map((child) =>
-    parsePlaylist(child)
+  const children = toArray(node.NODE as AnyRecord | AnyRecord[] | undefined).map((child, index) =>
+    parsePlaylist(child, `${pathId}.${index + 1}`)
   );
 
   return {
-    id: asString(node["@_Id"]) ?? asString(node["@_ID"]) ?? `playlist-${Math.random()}`,
+    id: asString(node["@_Id"]) ?? asString(node["@_ID"]) ?? `playlist-${pathId}`,
     name: asString(node["@_Name"]) ?? "Untitled",
     kind: nodeType,
     trackIds,
@@ -87,7 +97,7 @@ export function parseRekordboxXml(xml: string): Library {
     ? toArray((playlistsRoot.NODE ?? playlistsRoot) as AnyRecord | AnyRecord[])
     : [];
 
-  const playlists = rawNodes.map((node) => parsePlaylist(node));
+  const playlists = rawNodes.map((node, index) => parsePlaylist(node, String(index + 1)));
 
   return {
     tracks,

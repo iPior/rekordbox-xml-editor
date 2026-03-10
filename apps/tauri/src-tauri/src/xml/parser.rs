@@ -39,8 +39,7 @@ fn parse_metadata(root: Node<'_, '_>) -> LibraryMetadata {
         .find(|node| node.is_element() && node.has_tag_name("PRODUCT"));
 
     let product_name = product.and_then(|node| node.attribute("Name").map(ToOwned::to_owned));
-    let product_version =
-        product.and_then(|node| node.attribute("Version").map(ToOwned::to_owned));
+    let product_version = product.and_then(|node| node.attribute("Version").map(ToOwned::to_owned));
 
     LibraryMetadata {
         rekordbox_version,
@@ -96,25 +95,38 @@ fn parse_playlists(root: Node<'_, '_>, track_lookup: &HashMap<String, String>) -
         .into_iter()
         .flat_map(|playlist_parent| playlist_parent.children())
         .filter(|node| node.is_element() && node.has_tag_name("NODE"))
-        .flat_map(|node| {
+        .enumerate()
+        .flat_map(|(index, node)| {
+            let path = format!("{}", index + 1);
             if node.attribute("Type") == Some("0") {
                 node.children()
                     .filter(|child| child.is_element() && child.has_tag_name("NODE"))
-                    .map(|child| parse_playlist_node(child, track_lookup))
+                    .enumerate()
+                    .map(|(child_index, child)| {
+                        parse_playlist_node(
+                            child,
+                            track_lookup,
+                            format!("{}.{}", path, child_index + 1),
+                        )
+                    })
                     .collect::<Vec<_>>()
             } else {
-                vec![parse_playlist_node(node, track_lookup)]
+                vec![parse_playlist_node(node, track_lookup, path)]
             }
         })
         .collect()
 }
 
-fn parse_playlist_node(node: Node<'_, '_>, track_lookup: &HashMap<String, String>) -> Playlist {
+fn parse_playlist_node(
+    node: Node<'_, '_>,
+    track_lookup: &HashMap<String, String>,
+    path_id: String,
+) -> Playlist {
     let id = node
         .attribute("Id")
         .or_else(|| node.attribute("ID"))
         .map(ToOwned::to_owned)
-        .unwrap_or_else(|| format!("playlist-{}", node.range().start));
+        .unwrap_or_else(|| format!("playlist-{path_id}"));
     let name = node
         .attribute("Name")
         .map(ToOwned::to_owned)
@@ -133,23 +145,28 @@ fn parse_playlist_node(node: Node<'_, '_>, track_lookup: &HashMap<String, String
                 return Some(id_ref.to_string());
             }
 
+            if let Some(id_ref) = track.attribute("TrackID") {
+                return Some(id_ref.to_string());
+            }
+
             let location = track.attribute("Location")?;
-            track_lookup
-                .iter()
-                .find_map(|(track_id, track_location)| {
-                    if track_location == location {
-                        Some(track_id.clone())
-                    } else {
-                        None
-                    }
-                })
+            track_lookup.iter().find_map(|(track_id, track_location)| {
+                if track_location == location {
+                    Some(track_id.clone())
+                } else {
+                    None
+                }
+            })
         })
         .collect();
 
     let children = node
         .children()
         .filter(|child| child.is_element() && child.has_tag_name("NODE"))
-        .map(|child| parse_playlist_node(child, track_lookup))
+        .enumerate()
+        .map(|(index, child)| {
+            parse_playlist_node(child, track_lookup, format!("{}.{}", path_id, index + 1))
+        })
         .collect();
 
     Playlist {
